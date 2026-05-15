@@ -1,0 +1,25 @@
+interface RecommendationCardProps {
+  title: string;
+  interval: string;
+  mode: string;
+  action: string;
+}
+
+export function RecommendationCard({ title, interval, mode, action }: RecommendationCardProps) {
+  return (
+    <div className="rounded-lg border border-cyan-200 bg-cyan-50 p-5 shadow-panel">
+      <p className="text-sm font-bold text-aqua">{title}</p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div>
+          <p className="text-sm text-slate-500">추천 촬영 주기</p>
+          <p className="mt-1 text-2xl font-bold text-ink">{interval}</p>
+        </div>
+        <div>
+          <p className="text-sm text-slate-500">운영 모드</p>
+          <p className="mt-1 text-2xl font-bold text-ink">{mode}</p>
+        </div>
+      </div>
+      <p className="mt-4 rounded-md bg-white p-3 text-sm font-semibold leading-6 text-slate-700">{action}</p>
+    </div>
+  );
+}

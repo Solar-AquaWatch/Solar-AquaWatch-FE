@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540" role="img" aria-label="South canal camera sample">
+  <rect width="900" height="540" fill="#eef2f7"/>
+  <path d="M0 305 H900 V540 H0Z" fill="#476f83"/>
+  <path d="M0 372 C160 286 278 376 430 326 C600 270 745 322 900 256 L900 540 L0 540Z" fill="#224c68"/>
+  <path d="M0 220 L900 168 L900 226 L0 286Z" fill="#8a977d"/>
+  <path d="M78 314 H820" stroke="#fee2e2" stroke-width="12" stroke-dasharray="20 18" opacity=".84"/>
+  <rect x="720" y="124" width="92" height="126" rx="8" fill="#1f2937"/>
+  <circle cx="766" cy="166" r="30" fill="#111827"/>
+  <rect x="754" y="250" width="24" height="102" fill="#1f2937"/>
+</svg>

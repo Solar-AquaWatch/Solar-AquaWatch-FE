@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540" role="img" aria-label="East canal camera sample">
+  <rect width="900" height="540" fill="#e7eef0"/>
+  <rect y="350" width="900" height="190" fill="#346c86"/>
+  <path d="M0 380 C170 330 270 420 420 366 C620 295 760 338 900 278 L900 540 L0 540Z" fill="#1e5974"/>
+  <path d="M0 265 L210 220 L900 250 L900 294 L206 263 L0 315Z" fill="#7f8b7a"/>
+  <path d="M40 336 H840" stroke="#fef3c7" stroke-width="10" stroke-dasharray="16 18" opacity=".78"/>
+  <rect x="112" y="112" width="86" height="138" rx="8" fill="#334155"/>
+  <circle cx="155" cy="154" r="27" fill="#0f172a"/>
+  <rect x="143" y="250" width="24" height="92" fill="#334155"/>
+</svg>
