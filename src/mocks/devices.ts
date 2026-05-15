@@ -4,6 +4,7 @@ import { analysisResults } from "./analysisResults";
 export const devices: Device[] = [
   {
     id: "device-001",
+    institutionId: "institution-suss",
     name: "북문 배수로 CAM-01",
     location: "북문 1번 수로",
     description: "상류 유입량을 가장 먼저 확인하는 기준 카메라",
@@ -16,6 +17,7 @@ export const devices: Device[] = [
   },
   {
     id: "device-002",
+    institutionId: "institution-suss",
     name: "동측 암거 CAM-02",
     location: "동측 지하 암거",
     description: "비가 오면 역류 위험이 높아지는 좁은 수로",
@@ -28,6 +30,7 @@ export const devices: Device[] = [
   },
   {
     id: "device-003",
+    institutionId: "institution-suss",
     name: "남측 월류부 CAM-03",
     location: "남측 월류 위험 구간",
     description: "위험 수위 도달 여부를 집중 감시하는 장치",
@@ -40,6 +43,7 @@ export const devices: Device[] = [
   },
   {
     id: "device-004",
+    institutionId: "institution-farm",
     name: "서측 태양광 CAM-04",
     location: "서측 농수로",
     description: "태양광 패널 일조량 영향이 큰 저전력 운영 장치",
@@ -52,6 +56,7 @@ export const devices: Device[] = [
   },
   {
     id: "device-005",
+    institutionId: "institution-town",
     name: "중앙 합류부 CAM-05",
     location: "중앙 합류 수로",
     description: "여러 지류가 합쳐지는 수위 변동 관측 지점",

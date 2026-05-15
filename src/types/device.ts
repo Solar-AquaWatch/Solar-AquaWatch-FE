@@ -4,6 +4,7 @@ export type DeviceStatus = "ONLINE" | "OFFLINE" | "MAINTENANCE";
 
 export interface Device {
   id: string;
+  institutionId: string;
   name: string;
   location: string;
   description: string;

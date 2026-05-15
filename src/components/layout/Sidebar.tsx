@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAppData } from "../../app/AppDataContext";
 
 const links = [
   { to: "/dashboard", label: "대시보드" },
@@ -9,12 +10,21 @@ const links = [
 ];
 
 export function Sidebar() {
+  const navigate = useNavigate();
+  const { selectedInstitution, clearInstitution } = useAppData();
+
+  const handleChangeInstitution = () => {
+    clearInstitution();
+    navigate("/");
+  };
+
   return (
     <aside className="border-b border-slate-200 bg-ink text-white lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:border-b-0">
       <div className="flex h-full flex-col px-4 py-5">
         <div className="mb-5">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200">Admin Console</p>
           <h2 className="mt-2 text-xl font-bold tracking-normal">Solar AquaWatch AX</h2>
+          <p className="mt-2 text-sm font-semibold text-cyan-100">{selectedInstitution?.name}</p>
         </div>
         <nav className="grid grid-cols-2 gap-2 sm:grid-cols-5 lg:grid-cols-1">
           {links.map((link) => (
@@ -33,8 +43,15 @@ export function Sidebar() {
           ))}
         </nav>
         <div className="mt-auto hidden rounded-md border border-white/10 bg-white/5 p-4 text-sm text-slate-200 lg:block">
-          <p className="font-semibold text-white">MVP 운영 흐름</p>
-          <p className="mt-2 leading-6">대시보드 확인, 장치 등록, 테스트 이미지 분석, 추천 촬영 주기, 알림 처리까지 mock 상태로 연결됩니다.</p>
+          <p className="font-semibold text-white">선택된 기관</p>
+          <p className="mt-2 leading-6">{selectedInstitution?.region} · {selectedInstitution?.manager}</p>
+          <button
+            type="button"
+            onClick={handleChangeInstitution}
+            className="mt-4 w-full rounded-md border border-white/20 px-3 py-2 text-sm font-bold text-white transition hover:bg-white/10"
+          >
+            기관 변경
+          </button>
         </div>
       </div>
     </aside>

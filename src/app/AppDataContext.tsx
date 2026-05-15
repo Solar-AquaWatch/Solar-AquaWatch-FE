@@ -1,8 +1,10 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import { alerts as initialAlerts } from "../mocks/alerts";
 import { devices as initialDevices } from "../mocks/devices";
+import { institutions } from "../mocks/institutions";
 import type { Alert } from "../types/alert";
 import type { Device } from "../types/device";
+import type { Institution } from "../types/institution";
 import { getWaterStatusByLevel } from "../utils/status";
 
 interface DeviceInput {
@@ -12,8 +14,12 @@ interface DeviceInput {
 }
 
 interface AppDataContextValue {
+  institutions: Institution[];
+  selectedInstitution: Institution | null;
   devices: Device[];
   alerts: Alert[];
+  selectInstitution: (institutionId: string) => void;
+  clearInstitution: () => void;
   addDevice: (input: DeviceInput) => void;
   resolveAlert: (alertId: string) => void;
 }
@@ -21,17 +27,46 @@ interface AppDataContextValue {
 const AppDataContext = createContext<AppDataContextValue | undefined>(undefined);
 
 export function AppDataProvider({ children }: { children: ReactNode }) {
+  const [selectedInstitutionId, setSelectedInstitutionId] = useState<string | null>(null);
   const [devices, setDevices] = useState<Device[]>(initialDevices);
   const [alerts, setAlerts] = useState<Alert[]>(initialAlerts);
 
+  const selectedInstitution = useMemo(
+    () => institutions.find((institution) => institution.id === selectedInstitutionId) ?? null,
+    [selectedInstitutionId],
+  );
+  const institutionDevices = useMemo(
+    () =>
+      selectedInstitution
+        ? devices.filter((device) => device.institutionId === selectedInstitution.id)
+        : [],
+    [devices, selectedInstitution],
+  );
+  const institutionAlerts = useMemo(() => {
+    if (!selectedInstitution) {
+      return [];
+    }
+
+    const institutionDeviceIds = new Set(institutionDevices.map((device) => device.id));
+    return alerts.filter((alert) => institutionDeviceIds.has(alert.deviceId));
+  }, [alerts, institutionDevices, selectedInstitution]);
+
   const value = useMemo<AppDataContextValue>(
     () => ({
-      devices,
-      alerts,
+      institutions,
+      selectedInstitution,
+      devices: institutionDevices,
+      alerts: institutionAlerts,
+      selectInstitution: setSelectedInstitutionId,
+      clearInstitution: () => setSelectedInstitutionId(null),
       addDevice: (input) => {
+        if (!selectedInstitution) {
+          return;
+        }
         const waterLevel = 38;
         const newDevice: Device = {
           id: `device-${Date.now()}`,
+          institutionId: selectedInstitution.id,
           name: input.name,
           location: input.location,
           description: input.description,
@@ -61,7 +96,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         );
       },
     }),
-    [alerts, devices],
+    [institutionAlerts, institutionDevices, selectedInstitution],
   );
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;

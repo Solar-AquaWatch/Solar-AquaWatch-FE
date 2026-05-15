@@ -5,14 +5,14 @@ import { DashboardPage } from "../pages/DashboardPage";
 import { DeviceDetailPage } from "../pages/DeviceDetailPage";
 import { DeviceListPage } from "../pages/DeviceListPage";
 import { ImageUploadPage } from "../pages/ImageUploadPage";
+import { InstitutionSelectPage } from "../pages/InstitutionSelectPage";
 import { SolarOperationPage } from "../pages/SolarOperationPage";
 
 export const router = createBrowserRouter([
+  { path: "/", element: <InstitutionSelectPage /> },
   {
-    path: "/",
     element: <AppLayout />,
     children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: "dashboard", element: <DashboardPage /> },
       { path: "devices", element: <DeviceListPage /> },
       { path: "devices/:deviceId", element: <DeviceDetailPage /> },
@@ -21,4 +21,5 @@ export const router = createBrowserRouter([
       { path: "alerts", element: <AlertPage /> },
     ],
   },
+  { path: "*", element: <Navigate to="/" replace /> },
 ]);

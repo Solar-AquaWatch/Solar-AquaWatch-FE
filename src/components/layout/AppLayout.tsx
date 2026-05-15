@@ -1,8 +1,15 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAppData } from "../../app/AppDataContext";
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 
 export function AppLayout() {
+  const { selectedInstitution } = useAppData();
+
+  if (!selectedInstitution) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div className="min-h-screen bg-surface">
       <Sidebar />
