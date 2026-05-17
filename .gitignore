@@ -31,3 +31,7 @@ AI모델/
 *.h5
 *.pb
 *.weights
+
+# Python cache
+__pycache__/
+*.pyc
