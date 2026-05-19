@@ -6,6 +6,7 @@ import { SummaryCard } from "../components/dashboard/SummaryCard";
 import { WaterLevelChart } from "../components/dashboard/WaterLevelChart";
 import { SectionTitle } from "../components/common/SectionTitle";
 import { StatusBadge } from "../components/common/StatusBadge";
+import { EmptyState } from "../components/common/EmptyState";
 import { combinedWaterLevelHistory } from "../mocks/waterLevelHistory";
 import { solarPredictions } from "../mocks/solarPredictions";
 import { getSolarRecommendation } from "../utils/solarRecommendation";
@@ -15,7 +16,7 @@ export function DashboardPage() {
   const { devices, alerts } = useAppData();
   const dangerDevice = devices.find((device) => device.latestWaterStatus === "DANGER") ?? devices[0];
   const activeAlerts = alerts.filter((alert) => !alert.isResolved);
-  const latestSolar = solarPredictions.find((prediction) => prediction.deviceId === dangerDevice.id) ?? solarPredictions[0];
+  const latestSolar = solarPredictions.find((prediction) => prediction.deviceId === dangerDevice?.id) ?? solarPredictions[0];
   const solarRecommendation = getSolarRecommendation(latestSolar);
 
   const normalCount = devices.filter((device) => device.latestWaterStatus === "NORMAL").length;
@@ -38,7 +39,11 @@ export function DashboardPage() {
         </div>
         <div>
           <SectionTitle title="최근 촬영 이미지" description="대시보드에서 바로 확인하는 최신 수로 상태입니다." />
-          <RecentImageCard imageUrl={dangerDevice.latestImageUrl} title={dangerDevice.name} caption={`${dangerDevice.location} · ${dangerDevice.latestAnalysis.capturedAt}`} />
+          {dangerDevice ? (
+            <RecentImageCard imageUrl={dangerDevice.latestImageUrl} title={dangerDevice.name} caption={`${dangerDevice.location} · ${dangerDevice.latestAnalysis.capturedAt}`} />
+          ) : (
+            <EmptyState title="등록된 장치가 없습니다" description="장치 목록에서 수로 카메라 장치를 먼저 등록해주세요." />
+          )}
         </div>
       </section>
 
@@ -86,7 +91,7 @@ export function DashboardPage() {
         title="권장 조치"
         interval={solarRecommendation.recommendedInterval}
         mode={solarRecommendation.operationMode}
-        action={dangerDevice.latestAnalysis.recommendedAction}
+        action={dangerDevice?.latestAnalysis.recommendedAction ?? "장치가 등록되면 분석 결과를 기준으로 권장 조치가 표시됩니다."}
       />
     </div>
   );

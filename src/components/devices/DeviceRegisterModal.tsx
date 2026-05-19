@@ -3,15 +3,16 @@ import { useState } from "react";
 interface DeviceRegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (input: { name: string; location: string; description: string }) => void;
+  onSubmit: (input: { name: string; serialNumber: string; locationName: string; latitude?: string; longitude?: string; batteryLevel?: number }) => Promise<void>;
 }
 
 export function DeviceRegisterModal({ isOpen, onClose, onSubmit }: DeviceRegisterModalProps) {
-  const [form, setForm] = useState({ name: "", location: "", description: "" });
+  const [form, setForm] = useState({ name: "", serialNumber: "", locationName: "", latitude: "", longitude: "", batteryLevel: "100" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
-  const canSubmit = form.name.trim() && form.location.trim() && form.description.trim();
+  const canSubmit = form.name.trim() && form.serialNumber.trim() && form.locationName.trim();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4">
@@ -19,7 +20,7 @@ export function DeviceRegisterModal({ isOpen, onClose, onSubmit }: DeviceRegiste
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold tracking-normal text-ink">장치 등록</h2>
-            <p className="mt-1 text-sm text-slate-500">신규 ESP32-CAM 수로 장치를 local state에 추가합니다.</p>
+            <p className="mt-1 text-sm text-slate-500">신규 ESP32-CAM 수로 장치를 백엔드에 등록합니다.</p>
           </div>
           <button type="button" onClick={onClose} className="rounded-md border border-slate-200 px-3 py-2 text-sm font-bold text-slate-600">
             닫기
@@ -30,9 +31,21 @@ export function DeviceRegisterModal({ isOpen, onClose, onSubmit }: DeviceRegiste
           onSubmit={(event) => {
             event.preventDefault();
             if (!canSubmit) return;
-            onSubmit(form);
-            setForm({ name: "", location: "", description: "" });
-            onClose();
+            setIsSubmitting(true);
+            void onSubmit({
+              name: form.name,
+              serialNumber: form.serialNumber,
+              locationName: form.locationName,
+              latitude: form.latitude || undefined,
+              longitude: form.longitude || undefined,
+              batteryLevel: form.batteryLevel ? Number(form.batteryLevel) : undefined,
+            })
+              .then(() => {
+                setForm({ name: "", serialNumber: "", locationName: "", latitude: "", longitude: "", batteryLevel: "100" });
+                onClose();
+              })
+              .catch(() => undefined)
+              .finally(() => setIsSubmitting(false));
           }}
         >
           <label className="block text-sm font-bold text-slate-700">
@@ -45,29 +58,60 @@ export function DeviceRegisterModal({ isOpen, onClose, onSubmit }: DeviceRegiste
             />
           </label>
           <label className="block text-sm font-bold text-slate-700">
+            시리얼 번호
+            <input
+              value={form.serialNumber}
+              onChange={(event) => setForm((current) => ({ ...current, serialNumber: event.target.value }))}
+              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500"
+              placeholder="예: ESP32-CAM-0006"
+            />
+          </label>
+          <label className="block text-sm font-bold text-slate-700">
             위치
             <input
-              value={form.location}
-              onChange={(event) => setForm((current) => ({ ...current, location: event.target.value }))}
+              value={form.locationName}
+              onChange={(event) => setForm((current) => ({ ...current, locationName: event.target.value }))}
               className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500"
               placeholder="예: 북서측 임시 수로"
             />
           </label>
-          <label className="block text-sm font-bold text-slate-700">
-            설명
-            <textarea
-              value={form.description}
-              onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-              className="mt-2 min-h-24 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500"
-              placeholder="장치가 감시하는 구간과 운영 목적을 입력하세요."
-            />
-          </label>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <label className="block text-sm font-bold text-slate-700">
+              위도
+              <input
+                value={form.latitude}
+                onChange={(event) => setForm((current) => ({ ...current, latitude: event.target.value }))}
+                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500"
+                placeholder="37.5665"
+              />
+            </label>
+            <label className="block text-sm font-bold text-slate-700">
+              경도
+              <input
+                value={form.longitude}
+                onChange={(event) => setForm((current) => ({ ...current, longitude: event.target.value }))}
+                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500"
+                placeholder="126.9780"
+              />
+            </label>
+            <label className="block text-sm font-bold text-slate-700">
+              배터리
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={form.batteryLevel}
+                onChange={(event) => setForm((current) => ({ ...current, batteryLevel: event.target.value }))}
+                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500"
+              />
+            </label>
+          </div>
           <button
             type="submit"
-            disabled={!canSubmit}
+            disabled={!canSubmit || isSubmitting}
             className="w-full rounded-md bg-aqua px-4 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-300"
           >
-            등록
+            {isSubmitting ? "등록 중" : "등록"}
           </button>
         </form>
       </div>

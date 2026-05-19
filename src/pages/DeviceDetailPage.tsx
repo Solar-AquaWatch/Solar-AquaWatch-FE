@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAppData } from "../app/AppDataContext";
 import { EmptyState } from "../components/common/EmptyState";
@@ -6,12 +7,18 @@ import { StatusBadge } from "../components/common/StatusBadge";
 import { RecommendationCard } from "../components/dashboard/RecommendationCard";
 import { RecentImageCard } from "../components/dashboard/RecentImageCard";
 import { WaterLevelChart } from "../components/dashboard/WaterLevelChart";
-import { waterLevelHistory } from "../mocks/waterLevelHistory";
+import type { WaterLevelPoint } from "../types/analysis";
 
 export function DeviceDetailPage() {
   const { deviceId } = useParams();
-  const { devices, alerts } = useAppData();
+  const { devices, alerts, getWaterLevelGraph } = useAppData();
+  const [graphData, setGraphData] = useState<WaterLevelPoint[]>([]);
   const device = devices.find((item) => item.id === deviceId);
+
+  useEffect(() => {
+    if (!deviceId) return;
+    void getWaterLevelGraph(deviceId).then(setGraphData);
+  }, [deviceId, getWaterLevelGraph]);
 
   if (!device) {
     return <EmptyState title="장치를 찾을 수 없습니다" description="장치 목록으로 돌아가 다른 장치를 선택해주세요." />;
@@ -55,7 +62,7 @@ export function DeviceDetailPage() {
         <RecentImageCard imageUrl={device.latestImageUrl} title="최근 촬영 이미지" caption={analysis.capturedAt} />
         <div>
           <SectionTitle title="수위 변화 그래프" />
-          <WaterLevelChart data={waterLevelHistory[device.id] ?? waterLevelHistory["device-001"]} />
+          <WaterLevelChart data={graphData} />
         </div>
       </section>
 

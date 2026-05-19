@@ -10,7 +10,7 @@ export function AnalysisResultCard({ result }: AnalysisResultCardProps) {
     <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-panel">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-slate-500">mock AI 분석 결과</p>
+          <p className="text-sm font-semibold text-slate-500">백엔드 분석 결과</p>
           <h3 className="mt-1 text-xl font-bold tracking-normal text-ink">수위 {result.waterLevel}%</h3>
         </div>
         <StatusBadge value={result.status} />

@@ -1,14 +1,17 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppData } from "../app/AppDataContext";
 import { StatusBadge } from "../components/common/StatusBadge";
 
 export function InstitutionSelectPage() {
   const navigate = useNavigate();
-  const { institutions, selectedInstitution, selectInstitution } = useAppData();
+  const { institutions, selectedInstitution, selectInstitution, createInstitution, isLoading, errorMessage } = useAppData();
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [form, setForm] = useState({ name: "", managerName: "", phone: "", email: "", address: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSelect = (institutionId: string) => {
-    selectInstitution(institutionId);
-    navigate("/dashboard");
+    void selectInstitution(institutionId).then(() => navigate("/dashboard"));
   };
 
   return (
@@ -20,9 +23,65 @@ export function InstitutionSelectPage() {
           <p className="mt-4 text-base leading-7 text-slate-600">
             선택한 기관의 장치, 위험 알림, 태양광 운영 상태를 기준으로 대시보드가 구성됩니다.
           </p>
+          {errorMessage ? <p className="mt-4 rounded-md bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{errorMessage}</p> : null}
+          <button
+            type="button"
+            onClick={() => setIsRegisterOpen((current) => !current)}
+            className="mt-5 rounded-md bg-aqua px-4 py-3 text-sm font-bold text-white"
+          >
+            기관 등록
+          </button>
         </section>
 
+        {isRegisterOpen ? (
+          <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-panel">
+            <h2 className="text-xl font-bold tracking-normal text-ink">새 기관 등록</h2>
+            <form
+              className="mt-5 grid gap-4 md:grid-cols-2"
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (!form.name.trim()) return;
+                setIsSubmitting(true);
+                void createInstitution(form)
+                  .then(() => {
+                    setForm({ name: "", managerName: "", phone: "", email: "", address: "" });
+                    setIsRegisterOpen(false);
+                  })
+                  .catch(() => undefined)
+                  .finally(() => setIsSubmitting(false));
+              }}
+            >
+              <label className="block text-sm font-bold text-slate-700">
+                기관명
+                <input value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+              </label>
+              <label className="block text-sm font-bold text-slate-700">
+                관리자
+                <input value={form.managerName} onChange={(event) => setForm((current) => ({ ...current, managerName: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+              </label>
+              <label className="block text-sm font-bold text-slate-700">
+                연락처
+                <input value={form.phone} onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+              </label>
+              <label className="block text-sm font-bold text-slate-700">
+                이메일
+                <input value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+              </label>
+              <label className="block text-sm font-bold text-slate-700 md:col-span-2">
+                주소
+                <input value={form.address} onChange={(event) => setForm((current) => ({ ...current, address: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+              </label>
+              <button type="submit" disabled={!form.name.trim() || isSubmitting} className="rounded-md bg-ink px-4 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-300 md:col-span-2">
+                {isSubmitting ? "등록 중" : "등록"}
+              </button>
+            </form>
+          </section>
+        ) : null}
+
         <section className="grid gap-4 md:grid-cols-3">
+          {isLoading && !institutions.length ? (
+            <div className="rounded-lg border border-slate-200 bg-white p-6 text-sm font-bold text-slate-500 shadow-panel md:col-span-3">기관 목록을 불러오는 중입니다.</div>
+          ) : null}
           {institutions.map((institution) => {
             const isSelected = selectedInstitution?.id === institution.id;
 
@@ -64,6 +123,11 @@ export function InstitutionSelectPage() {
               </button>
             );
           })}
+          {!isLoading && !institutions.length ? (
+            <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-sm font-bold text-slate-500 md:col-span-3">
+              등록된 기관이 없습니다. 기관 등록을 먼저 진행해주세요.
+            </div>
+          ) : null}
         </section>
       </div>
     </main>

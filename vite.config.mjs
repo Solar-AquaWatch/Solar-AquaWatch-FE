@@ -4,4 +4,14 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   cacheDir: ".vite",
   plugins: [react()],
+  server: {
+    proxy: {
+      "/api": "http://localhost:8080",
+    },
+  },
+  preview: {
+    proxy: {
+      "/api": "http://localhost:8080",
+    },
+  },
 });

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useAppData } from "../app/AppDataContext";
+import { EmptyState } from "../components/common/EmptyState";
 import { SectionTitle } from "../components/common/SectionTitle";
 import { DeviceCard } from "../components/devices/DeviceCard";
 import { DeviceRegisterModal } from "../components/devices/DeviceRegisterModal";
 
 export function DeviceListPage() {
-  const { devices, addDevice } = useAppData();
+  const { devices, addDevice, isLoading, errorMessage } = useAppData();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -16,10 +17,16 @@ export function DeviceListPage() {
           장치 등록
         </button>
       </div>
+      {errorMessage ? <p className="rounded-md bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{errorMessage}</p> : null}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {devices.map((device) => (
           <DeviceCard key={device.id} device={device} />
         ))}
+        {!isLoading && !devices.length ? (
+          <div className="md:col-span-2 xl:col-span-3">
+            <EmptyState title="등록된 장치가 없습니다" description="장치 등록 버튼으로 백엔드에 새 수로 카메라를 등록해주세요." />
+          </div>
+        ) : null}
       </div>
       <DeviceRegisterModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={addDevice} />
     </div>
