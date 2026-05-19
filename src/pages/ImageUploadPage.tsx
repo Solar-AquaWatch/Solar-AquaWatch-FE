@@ -1,27 +1,63 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { useAppData } from "../app/AppDataContext";
 import { SectionTitle } from "../components/common/SectionTitle";
 import { AnalysisResultCard } from "../components/upload/AnalysisResultCard";
 import { ImagePreview } from "../components/upload/ImagePreview";
-import type { AnalysisResult } from "../types/analysis";
+import type { AnalysisResult, WaterStatus } from "../types/analysis";
 
-const mockUploadResult: AnalysisResult = {
-  id: "upload-analysis-001",
-  deviceId: "device-003",
-  waterLevel: 82,
-  status: "DANGER",
-  riskScore: 91,
-  confidence: 0.89,
-  reason: "수위가 위험 기준선에 근접했고 최근 수위 상승 추세가 감지되었습니다.",
-  recommendedAction: "촬영 주기를 5분으로 단축하고 현장 점검을 진행하세요.",
-  capturedAt: "2026-05-15 11:00",
-};
+const AI_API_URL = "http://localhost:8000/ai/analyze-water-level";
+
+interface AiAnalyzeResponse {
+  waterLevel: number;
+  status: WaterStatus;
+  riskScore: number;
+  confidence: number;
+  reason: string;
+  recommendedAction: string;
+  solarPrediction?: "HIGH" | "MEDIUM" | "LOW";
+  recommendedInterval?: number;
+  dataSources?: string[];
+}
+
+function toAnalysisResult(
+  aiResult: AiAnalyzeResponse,
+  deviceId: string
+): AnalysisResult {
+  return {
+    id: `upload-${Date.now()}`,
+    deviceId,
+    waterLevel: aiResult.waterLevel,
+    status: aiResult.status,
+    riskScore: aiResult.riskScore,
+    confidence: aiResult.confidence,
+    reason: aiResult.reason,
+    recommendedAction: aiResult.recommendedAction,
+    capturedAt: new Date().toLocaleString("ko-KR"),
+    solarPrediction: aiResult.solarPrediction,
+    recommendedInterval: aiResult.recommendedInterval,
+    dataSources: aiResult.dataSources ?? [],
+  };
+}
+
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+
+    reader.readAsDataURL(file);
+  });
+}
 
 export function ImageUploadPage() {
-  const { devices } = useAppData();
+  const { devices, applyAnalysisResult } = useAppData();
+
   const [selectedDeviceId, setSelectedDeviceId] = useState(devices[0]?.id ?? "");
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const previewUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
 
@@ -31,10 +67,57 @@ export function ImageUploadPage() {
     };
   }, [previewUrl]);
 
+  useEffect(() => {
+    if (!selectedDeviceId && devices[0]?.id) {
+      setSelectedDeviceId(devices[0].id);
+    }
+  }, [devices, selectedDeviceId]);
+
+  const handleAnalyze = async () => {
+    if (!file || !selectedDeviceId) return;
+
+    setIsAnalyzing(true);
+    setErrorMessage("");
+    setResult(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("batteryLevel", "70");
+
+      const response = await fetch(AI_API_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`AI 서버 오류: ${response.status}`);
+      }
+
+      const aiResult = (await response.json()) as AiAnalyzeResponse;
+      const mappedResult = toAnalysisResult(aiResult, selectedDeviceId);
+      const imageDataUrl = await readFileAsDataUrl(file);
+
+      setResult(mappedResult);
+      applyAnalysisResult(selectedDeviceId, mappedResult, imageDataUrl);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        "AI 분석 서버 연결에 실패했습니다. FastAPI 서버가 켜져 있는지 확인하세요."
+      );
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   return (
     <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-panel">
-        <SectionTitle title="테스트 이미지 업로드" description="실제 API 호출 없이 선택 이미지와 mock AI 분석 결과를 확인합니다." />
+        <SectionTitle
+          title="테스트 이미지 업로드"
+          description="업로드한 이미지를 FastAPI/OpenCV AI 서버로 전송해 수위 상태와 위험도를 분석합니다."
+        />
+
         <div className="space-y-5">
           <label className="block text-sm font-bold text-slate-700">
             장치 선택
@@ -44,10 +127,13 @@ export function ImageUploadPage() {
               className="mt-2 w-full rounded-md border border-slate-300 px-3 py-3 outline-none focus:border-cyan-500"
             >
               {devices.map((device) => (
-                <option key={device.id} value={device.id}>{device.name}</option>
+                <option key={device.id} value={device.id}>
+                  {device.name}
+                </option>
               ))}
             </select>
           </label>
+
           <label className="block text-sm font-bold text-slate-700">
             이미지 파일
             <input
@@ -56,18 +142,26 @@ export function ImageUploadPage() {
               onChange={(event) => {
                 setFile(event.target.files?.[0] ?? null);
                 setResult(null);
+                setErrorMessage("");
               }}
               className="mt-2 w-full rounded-md border border-slate-300 px-3 py-3 text-sm"
             />
           </label>
+
           <button
             type="button"
-            disabled={!file}
-            onClick={() => setResult({ ...mockUploadResult, deviceId: selectedDeviceId, id: `upload-${Date.now()}` })}
+            disabled={!file || isAnalyzing}
+            onClick={handleAnalyze}
             className="w-full rounded-md bg-aqua px-4 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-300"
           >
-            분석 요청
+            {isAnalyzing ? "AI 분석 중..." : "분석 요청"}
           </button>
+
+          {errorMessage ? (
+            <p className="rounded-md bg-red-50 p-3 text-sm font-bold text-red-700">
+              {errorMessage}
+            </p>
+          ) : null}
         </div>
       </section>
 
