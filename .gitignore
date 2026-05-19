@@ -4,3 +4,26 @@ dist
 .vite
 .npm-cache
 *.log
+
+# local API keys
+.env
+ai_server/.env
+
+# AI Hub datasets and model files
+data/aihub/
+datasets/
+AI모델/
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.pt
+*.pth
+*.onnx
+*.h5
+*.pb
+*.weights
+
+# Python cache
+__pycache__/
+*.pyc

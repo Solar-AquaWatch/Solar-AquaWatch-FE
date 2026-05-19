@@ -1,4 +1,4 @@
-export type WaterStatus = "NORMAL" | "WARNING" | "DANGER";
+﻿export type WaterStatus = "NORMAL" | "WARNING" | "DANGER";
 
 export interface AnalysisResult {
   id: string;
@@ -10,6 +10,10 @@ export interface AnalysisResult {
   reason: string;
   recommendedAction: string;
   capturedAt: string;
+
+  solarPrediction?: "HIGH" | "MEDIUM" | "LOW";
+  recommendedInterval?: number;
+  dataSources?: string[];
 }
 
 export interface WaterLevelPoint {

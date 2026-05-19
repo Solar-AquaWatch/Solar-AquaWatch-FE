@@ -20,12 +20,37 @@ interface AppDataContextValue {
   resolveAlert: (alertId: string) => Promise<void>;
   getWaterLevelGraph: (deviceId: string) => Promise<WaterLevelPoint[]>;
   refreshSelectedInstitution: () => Promise<void>;
+  applyAnalysisResult: (deviceId: string, result: AnalysisResult, imageUrl?: string) => void;
 }
 
 const AppDataContext = createContext<AppDataContextValue | undefined>(undefined);
 
 function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.";
+}
+
+function formatNow() {
+  return new Date().toLocaleString("ko-KR");
+}
+
+function buildWaterAlert(device: Device, result: AnalysisResult): Alert | null {
+  if (result.status === "NORMAL") {
+    return null;
+  }
+
+  return {
+    id: `local-alert-${Date.now()}`,
+    type: "WATER_RISK",
+    message:
+      result.status === "DANGER"
+        ? `${device.name} 수위가 위험 단계입니다. 즉시 현장 점검이 필요합니다.`
+        : `${device.name} 수위가 주의 단계로 상승했습니다. 추이 확인이 필요합니다.`,
+    deviceId: device.id,
+    deviceName: device.name,
+    waterStatus: result.status,
+    isResolved: false,
+    createdAt: formatNow(),
+  };
 }
 
 export function AppDataProvider({ children }: { children: ReactNode }) {
@@ -146,6 +171,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       },
       resolveAlert: async (alertId) => {
         setErrorMessage(null);
+        if (alertId.startsWith("local-alert-")) {
+          setAlerts((current) => current.map((alert) => (alert.id === alertId ? { ...alert, isResolved: true } : alert)));
+          return;
+        }
         try {
           const resolvedAlert = await api.resolveAlert(alertId);
           setAlerts((current) => current.map((alert) => (alert.id === alertId ? resolvedAlert : alert)));
@@ -162,6 +191,40 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
           await loadCompanySnapshot(selectedInstitution.id);
         } else {
           await loadCompanies();
+        }
+      },
+      applyAnalysisResult: (deviceId, result, imageUrl) => {
+        let updatedDevice: Device | undefined;
+
+        setDevices((current) =>
+          current.map((device) => {
+            if (device.id !== deviceId) {
+              return device;
+            }
+
+            updatedDevice = {
+              ...device,
+              latestWaterStatus: result.status,
+              recommendedInterval: result.recommendedInterval ? `${result.recommendedInterval}분` : device.recommendedInterval,
+              latestImageUrl: imageUrl ?? device.latestImageUrl,
+              latestAnalysis: result,
+            };
+
+            return updatedDevice;
+          }),
+        );
+
+        if (updatedDevice) {
+          setInstitutions((current) =>
+            current.map((institution) =>
+              institution.id === updatedDevice?.institutionId ? { ...institution, riskLevel: result.status } : institution,
+            ),
+          );
+
+          const alert = buildWaterAlert(updatedDevice, result);
+          if (alert) {
+            setAlerts((current) => [alert, ...current]);
+          }
         }
       },
     }),
