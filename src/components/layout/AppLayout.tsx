@@ -15,7 +15,7 @@ export function AppLayout() {
       <Sidebar />
       <div className="min-h-screen lg:pl-72">
         <Header />
-        <main className="px-4 py-6 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-[1480px] px-4 py-6 sm:px-6 lg:px-8">
           <Outlet />
         </main>
       </div>

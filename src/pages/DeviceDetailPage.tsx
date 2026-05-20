@@ -32,8 +32,8 @@ export function DeviceDetailPage() {
       <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-panel">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <Link to="/devices" className="text-sm font-bold text-aqua">장치 목록으로 이동</Link>
-            <h2 className="mt-3 text-2xl font-bold tracking-normal text-ink">{device.name}</h2>
+            <Link to="/devices" className="text-sm font-bold text-teal-700">장치 목록으로 이동</Link>
+            <h2 className="mt-3 text-2xl font-bold tracking-normal text-slate-950">{device.name}</h2>
             <p className="mt-1 text-slate-500">{device.location}</p>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">{device.description}</p>
           </div>
@@ -45,7 +45,7 @@ export function DeviceDetailPage() {
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           <div className="rounded-md bg-slate-50 p-4">
             <p className="text-sm text-slate-500">배터리 잔량</p>
-            <p className="mt-1 text-2xl font-bold text-ink">{device.batteryLevel}%</p>
+            <p className="mt-1 text-2xl font-bold text-slate-950">{device.batteryLevel}%</p>
           </div>
           <div className="rounded-md bg-slate-50 p-4">
             <p className="text-sm text-slate-500">위험도 점수</p>
@@ -53,7 +53,7 @@ export function DeviceDetailPage() {
           </div>
           <div className="rounded-md bg-slate-50 p-4">
             <p className="text-sm text-slate-500">신뢰도</p>
-            <p className="mt-1 text-2xl font-bold text-ink">{Math.round(analysis.confidence * 100)}%</p>
+            <p className="mt-1 text-2xl font-bold text-slate-950">{Math.round(analysis.confidence * 100)}%</p>
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@ export function DeviceDetailPage() {
                   <StatusBadge value={alert.type} />
                   <StatusBadge value={alert.isResolved ? "RESOLVED" : "OPEN"} />
                 </div>
-                <p className="mt-2 font-bold text-ink">{alert.message}</p>
+                <p className="mt-2 font-bold text-slate-950">{alert.message}</p>
                 <p className="mt-1 text-sm text-slate-500">{alert.createdAt}</p>
               </div>
             ))

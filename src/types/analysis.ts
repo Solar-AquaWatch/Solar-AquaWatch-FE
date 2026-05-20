@@ -13,6 +13,8 @@ export interface AnalysisResult {
 
   solarPrediction?: "HIGH" | "MEDIUM" | "LOW";
   recommendedInterval?: number;
+  observedWaterLevel?: number | null;
+  observedWaterLevelText?: string | null;
   dataSources?: string[];
 }
 

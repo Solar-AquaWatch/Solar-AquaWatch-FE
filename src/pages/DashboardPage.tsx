@@ -52,12 +52,12 @@ export function DashboardPage() {
           <SectionTitle title="최근 위험 알림" description="미처리 알림은 현장 점검 후 처리 완료로 변경할 수 있습니다." />
           <div className="space-y-3">
             {activeAlerts.slice(0, 3).map((alert) => (
-              <Link key={alert.id} to="/alerts" className="block rounded-md border border-slate-200 p-4 transition hover:border-red-300">
+              <Link key={alert.id} to="/alerts" className="block rounded-md border border-slate-200 bg-slate-50/70 p-4 transition hover:border-red-300 hover:bg-white">
                 <div className="flex flex-wrap items-center gap-2">
                   <StatusBadge value={alert.type} />
                   <StatusBadge value={alert.waterStatus} />
                 </div>
-                <p className="mt-2 font-bold text-ink">{alert.message}</p>
+                <p className="mt-2 font-bold text-slate-950">{alert.message}</p>
                 <p className="mt-1 text-sm text-slate-500">{alert.deviceName} · {alert.createdAt}</p>
               </Link>
             ))}
@@ -67,21 +67,21 @@ export function DashboardPage() {
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-panel">
           <SectionTitle title="태양광·배터리 상태" />
           <dl className="space-y-4 text-sm">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <dt className="text-slate-500">날씨</dt>
-              <dd className="font-bold text-ink">{weatherLabel[latestSolar.weather]}</dd>
+              <dd className="font-bold text-slate-950">{weatherLabel[latestSolar.weather]}</dd>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <dt className="text-slate-500">시간대</dt>
-              <dd className="font-bold text-ink">{periodLabel[latestSolar.period]}</dd>
+              <dd className="font-bold text-slate-950">{periodLabel[latestSolar.period]}</dd>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <dt className="text-slate-500">발전 예측</dt>
-              <dd className="font-bold text-ink">{solarRecommendation.generationForecast}</dd>
+              <dd className="font-bold text-slate-950">{solarRecommendation.generationForecast}</dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-slate-500">배터리</dt>
-              <dd className="font-bold text-ink">{latestSolar.batteryLevel}%</dd>
+              <dd className="font-bold text-slate-950">{latestSolar.batteryLevel}%</dd>
             </div>
           </dl>
         </div>

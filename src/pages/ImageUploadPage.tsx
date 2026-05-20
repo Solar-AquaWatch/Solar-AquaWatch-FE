@@ -16,6 +16,8 @@ interface AiAnalyzeResponse {
   recommendedAction: string;
   solarPrediction?: "HIGH" | "MEDIUM" | "LOW";
   recommendedInterval?: number;
+  observedWaterLevel?: number | null;
+  observedWaterLevelText?: string | null;
   dataSources?: string[];
 }
 
@@ -32,6 +34,8 @@ function toAnalysisResult(aiResult: AiAnalyzeResponse, deviceId: string): Analys
     capturedAt: new Date().toLocaleString("ko-KR"),
     solarPrediction: aiResult.solarPrediction,
     recommendedInterval: aiResult.recommendedInterval,
+    observedWaterLevel: aiResult.observedWaterLevel,
+    observedWaterLevelText: aiResult.observedWaterLevelText,
     dataSources: aiResult.dataSources ?? [],
   };
 }
@@ -118,7 +122,7 @@ export function ImageUploadPage() {
             <select
               value={selectedDeviceId}
               onChange={(event) => setSelectedDeviceId(event.target.value)}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-3 outline-none focus:border-cyan-500"
+              className="mt-2 w-full control"
             >
               {devices.map((device) => (
                 <option key={device.id} value={device.id}>
@@ -136,7 +140,7 @@ export function ImageUploadPage() {
               max="100"
               value={batteryLevel}
               onChange={(event) => setBatteryLevel(event.target.value)}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-3 outline-none focus:border-cyan-500"
+              className="mt-2 w-full control"
             />
           </label>
 
@@ -150,7 +154,7 @@ export function ImageUploadPage() {
                 setResult(null);
                 setErrorMessage("");
               }}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-3 text-sm"
+              className="mt-2 w-full control"
             />
           </label>
 
@@ -158,7 +162,7 @@ export function ImageUploadPage() {
             type="button"
             disabled={!file || !selectedDeviceId || isAnalyzing}
             onClick={handleAnalyze}
-            className="w-full rounded-md bg-aqua px-4 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="w-full primary-button"
           >
             {isAnalyzing ? "AI 분석 중..." : "분석 요청"}
           </button>

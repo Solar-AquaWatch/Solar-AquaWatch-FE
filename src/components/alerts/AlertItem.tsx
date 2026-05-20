@@ -17,7 +17,7 @@ export function AlertItem({ alert, onResolve }: AlertItemProps) {
             <StatusBadge value={alert.waterStatus} />
             <StatusBadge value={alert.isResolved ? "RESOLVED" : "OPEN"} />
           </div>
-          <h3 className="mt-3 text-lg font-bold tracking-normal text-ink">{alert.message}</h3>
+          <h3 className="mt-3 text-lg font-bold tracking-normal text-slate-950">{alert.message}</h3>
           <p className="mt-1 text-sm text-slate-500">
             {alertTypeLabel[alert.type]} · {alert.deviceName} · {alert.createdAt}
           </p>
@@ -26,7 +26,7 @@ export function AlertItem({ alert, onResolve }: AlertItemProps) {
           type="button"
           onClick={() => onResolve(alert.id)}
           disabled={alert.isResolved}
-          className="rounded-md bg-ink px-4 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+          className="primary-button px-4 py-2"
         >
           처리 완료
         </button>

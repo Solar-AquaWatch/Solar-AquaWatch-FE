@@ -5,7 +5,7 @@ interface ImagePreviewProps {
 export function ImagePreview({ previewUrl }: ImagePreviewProps) {
   if (!previewUrl) {
     return (
-      <div className="flex h-80 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-white text-sm font-semibold text-slate-500">
+      <div className="flex h-80 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-white text-sm font-semibold text-slate-500 shadow-soft">
         선택한 테스트 이미지 미리보기가 여기에 표시됩니다.
       </div>
     );

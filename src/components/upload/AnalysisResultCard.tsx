@@ -37,9 +37,9 @@ export function AnalysisResultCard({ result }: AnalysisResultCardProps) {
     <article className="rounded-lg border border-slate-200 bg-white p-6 shadow-panel">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold text-slate-500">AI 분석 결과</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">AI 분석 결과</p>
           <h3 className="mt-1 text-2xl font-extrabold text-slate-900">
-            수위 {result.waterLevel}%
+            수위 감지 {result.waterLevel}%
           </h3>
         </div>
 
@@ -53,21 +53,21 @@ export function AnalysisResultCard({ result }: AnalysisResultCardProps) {
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-lg bg-slate-50 p-4">
+        <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
           <p className="text-xs font-bold text-slate-500">위험도 점수</p>
           <p className="mt-1 text-2xl font-extrabold text-slate-900">
             {result.riskScore}
           </p>
         </div>
 
-        <div className="rounded-lg bg-slate-50 p-4">
+        <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
           <p className="text-xs font-bold text-slate-500">신뢰도</p>
           <p className="mt-1 text-2xl font-extrabold text-slate-900">
             {Math.round(result.confidence * 100)}%
           </p>
         </div>
 
-        <div className="rounded-lg bg-slate-50 p-4">
+        <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
           <p className="text-xs font-bold text-slate-500">태양광 발전 가능량</p>
           <p
             className={`mt-2 inline-flex rounded-full border px-3 py-1 text-sm font-extrabold ${solarClass(
@@ -78,7 +78,14 @@ export function AnalysisResultCard({ result }: AnalysisResultCardProps) {
           </p>
         </div>
 
-        <div className="rounded-lg bg-slate-50 p-4">
+        <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
+          <p className="text-xs font-bold text-slate-500">AI Hub surface 수위</p>
+          <p className="mt-1 text-2xl font-extrabold text-slate-900">
+            {result.observedWaterLevelText ?? "미감지"}
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
           <p className="text-xs font-bold text-slate-500">추천 촬영 주기</p>
           <p className="mt-1 text-2xl font-extrabold text-slate-900">
             {result.recommendedInterval ? `${result.recommendedInterval}분` : "미확인"}

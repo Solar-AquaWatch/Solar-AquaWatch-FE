@@ -18,8 +18,8 @@ export function InstitutionSelectPage() {
     <main className="min-h-screen bg-surface px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-center gap-8">
         <section className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-aqua">Solar AquaWatch AX</p>
-          <h1 className="mt-4 text-4xl font-bold tracking-normal text-ink sm:text-5xl">기관을 선택하세요</h1>
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-teal-700">Solar AquaWatch AX</p>
+          <h1 className="mt-4 text-4xl font-bold tracking-normal text-slate-950 sm:text-5xl">기관을 선택하세요</h1>
           <p className="mt-4 text-base leading-7 text-slate-600">
             선택한 기관의 장치, 위험 알림, 태양광 운영 상태를 기준으로 대시보드가 구성됩니다.
           </p>
@@ -27,7 +27,7 @@ export function InstitutionSelectPage() {
           <button
             type="button"
             onClick={() => setIsRegisterOpen((current) => !current)}
-            className="mt-5 rounded-md bg-aqua px-4 py-3 text-sm font-bold text-white"
+            className="mt-5 primary-button"
           >
             기관 등록
           </button>
@@ -35,7 +35,7 @@ export function InstitutionSelectPage() {
 
         {isRegisterOpen ? (
           <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-panel">
-            <h2 className="text-xl font-bold tracking-normal text-ink">새 기관 등록</h2>
+            <h2 className="text-xl font-bold tracking-normal text-slate-950">새 기관 등록</h2>
             <form
               className="mt-5 grid gap-4 md:grid-cols-2"
               onSubmit={(event) => {
@@ -53,25 +53,25 @@ export function InstitutionSelectPage() {
             >
               <label className="block text-sm font-bold text-slate-700">
                 기관명
-                <input value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+                <input value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} className="mt-2 w-full control" />
               </label>
               <label className="block text-sm font-bold text-slate-700">
                 관리자
-                <input value={form.managerName} onChange={(event) => setForm((current) => ({ ...current, managerName: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+                <input value={form.managerName} onChange={(event) => setForm((current) => ({ ...current, managerName: event.target.value }))} className="mt-2 w-full control" />
               </label>
               <label className="block text-sm font-bold text-slate-700">
                 연락처
-                <input value={form.phone} onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+                <input value={form.phone} onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))} className="mt-2 w-full control" />
               </label>
               <label className="block text-sm font-bold text-slate-700">
                 이메일
-                <input value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+                <input value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} className="mt-2 w-full control" />
               </label>
               <label className="block text-sm font-bold text-slate-700 md:col-span-2">
                 주소
-                <input value={form.address} onChange={(event) => setForm((current) => ({ ...current, address: event.target.value }))} className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-cyan-500" />
+                <input value={form.address} onChange={(event) => setForm((current) => ({ ...current, address: event.target.value }))} className="mt-2 w-full control" />
               </label>
-              <button type="submit" disabled={!form.name.trim() || isSubmitting} className="rounded-md bg-ink px-4 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-300 md:col-span-2">
+              <button type="submit" disabled={!form.name.trim() || isSubmitting} className="primary-button md:col-span-2">
                 {isSubmitting ? "등록 중" : "등록"}
               </button>
             </form>
@@ -91,14 +91,14 @@ export function InstitutionSelectPage() {
                 type="button"
                 onClick={() => handleSelect(institution.id)}
                 className={[
-                  "flex min-h-72 flex-col rounded-lg border bg-white p-5 text-left shadow-panel transition hover:-translate-y-1 hover:border-aqua",
-                  isSelected ? "border-aqua ring-2 ring-cyan-100" : "border-slate-200",
+                  "flex min-h-72 flex-col rounded-lg border bg-white p-5 text-left shadow-panel transition hover:-translate-y-1 hover:border-teal-500",
+                  isSelected ? "border-teal-600 ring-2 ring-teal-100" : "border-slate-200",
                 ].join(" ")}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm font-bold text-aqua">{institution.type}</p>
-                    <h2 className="mt-2 text-xl font-bold tracking-normal text-ink">{institution.name}</h2>
+                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-teal-700">{institution.type}</p>
+                    <h2 className="mt-2 text-xl font-bold tracking-normal text-slate-950">{institution.name}</h2>
                   </div>
                   <StatusBadge value={institution.riskLevel} />
                 </div>
@@ -106,18 +106,18 @@ export function InstitutionSelectPage() {
                 <dl className="mt-5 grid gap-3 text-sm">
                   <div className="flex items-center justify-between border-t border-slate-100 pt-3">
                     <dt className="text-slate-500">지역</dt>
-                    <dd className="font-bold text-ink">{institution.region}</dd>
+                    <dd className="font-bold text-slate-950">{institution.region}</dd>
                   </div>
                   <div className="flex items-center justify-between">
                     <dt className="text-slate-500">관리팀</dt>
-                    <dd className="font-bold text-ink">{institution.manager}</dd>
+                    <dd className="font-bold text-slate-950">{institution.manager}</dd>
                   </div>
                   <div className="flex items-center justify-between">
                     <dt className="text-slate-500">등록 장치</dt>
-                    <dd className="font-bold text-ink">{institution.deviceCount}대</dd>
+                    <dd className="font-bold text-slate-950">{institution.deviceCount}대</dd>
                   </div>
                 </dl>
-                <span className="mt-5 rounded-md bg-ink px-4 py-3 text-center text-sm font-bold text-white">
+                <span className="mt-5 rounded-md bg-slate-950 px-4 py-3 text-center text-sm font-bold text-white">
                   이 기관으로 진입
                 </span>
               </button>

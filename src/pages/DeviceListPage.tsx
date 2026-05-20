@@ -13,7 +13,7 @@ export function DeviceListPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <SectionTitle title="수로 카메라 장치" description="장치를 등록하거나 선택해 상세 수위 분석 상태를 확인합니다." />
-        <button type="button" onClick={() => setIsModalOpen(true)} className="rounded-md bg-aqua px-4 py-3 text-sm font-bold text-white">
+        <button type="button" onClick={() => setIsModalOpen(true)} className="primary-button">
           장치 등록
         </button>
       </div>

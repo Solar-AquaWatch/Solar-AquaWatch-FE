@@ -24,7 +24,7 @@ export function SolarOperationPage() {
           <select
             value={selectedDeviceId}
             onChange={(event) => setSelectedDeviceId(event.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-3 text-sm font-semibold outline-none focus:border-cyan-500"
+            className="control"
           >
             {solarPredictions.map((prediction) => {
               const device = devices.find((item) => item.id === prediction.deviceId);
@@ -33,21 +33,21 @@ export function SolarOperationPage() {
           </select>
         </div>
         <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-md bg-slate-50 p-4">
+          <div className="rounded-md border border-slate-100 bg-slate-50 p-4">
             <p className="text-sm text-slate-500">날씨 상태</p>
-            <p className="mt-1 text-2xl font-bold text-ink">{weatherLabel[selectedPrediction.weather]}</p>
+            <p className="mt-1 text-2xl font-bold text-slate-950">{weatherLabel[selectedPrediction.weather]}</p>
           </div>
-          <div className="rounded-md bg-slate-50 p-4">
+          <div className="rounded-md border border-slate-100 bg-slate-50 p-4">
             <p className="text-sm text-slate-500">시간대</p>
-            <p className="mt-1 text-2xl font-bold text-ink">{periodLabel[selectedPrediction.period]}</p>
+            <p className="mt-1 text-2xl font-bold text-slate-950">{periodLabel[selectedPrediction.period]}</p>
           </div>
-          <div className="rounded-md bg-slate-50 p-4">
+          <div className="rounded-md border border-slate-100 bg-slate-50 p-4">
             <p className="text-sm text-slate-500">태양광 발전 예측</p>
-            <p className="mt-1 text-2xl font-bold text-ink">{recommendation.generationForecast}</p>
+            <p className="mt-1 text-2xl font-bold text-slate-950">{recommendation.generationForecast}</p>
           </div>
-          <div className="rounded-md bg-slate-50 p-4">
+          <div className="rounded-md border border-slate-100 bg-slate-50 p-4">
             <p className="text-sm text-slate-500">배터리 잔량</p>
-            <p className="mt-1 text-2xl font-bold text-ink">{selectedPrediction.batteryLevel}%</p>
+            <p className="mt-1 text-2xl font-bold text-slate-950">{selectedPrediction.batteryLevel}%</p>
           </div>
         </div>
       </section>
@@ -58,7 +58,7 @@ export function SolarOperationPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between gap-4">
               <span className="text-sm font-semibold text-slate-500">선택 장치</span>
-              <span className="font-bold text-ink">{selectedDevice?.name ?? selectedPrediction.deviceId}</span>
+              <span className="font-bold text-slate-950">{selectedDevice?.name ?? selectedPrediction.deviceId}</span>
             </div>
             <div className="flex items-center justify-between gap-4">
               <span className="text-sm font-semibold text-slate-500">수위 상태</span>
@@ -66,15 +66,15 @@ export function SolarOperationPage() {
             </div>
             <div className="flex items-center justify-between gap-4">
               <span className="text-sm font-semibold text-slate-500">추천 촬영 주기</span>
-              <span className="text-2xl font-bold text-aqua">{recommendation.recommendedInterval}</span>
+              <span className="text-2xl font-bold text-teal-700">{recommendation.recommendedInterval}</span>
             </div>
             <div className="flex items-center justify-between gap-4">
               <span className="text-sm font-semibold text-slate-500">운영 모드</span>
-              <span className="font-bold text-ink">{recommendation.operationMode}</span>
+              <span className="font-bold text-slate-950">{recommendation.operationMode}</span>
             </div>
             <div className="flex items-center justify-between gap-4">
               <span className="text-sm font-semibold text-slate-500">절전 모드</span>
-              <span className="font-bold text-ink">{recommendation.powerSaving ? "사용" : "미사용"}</span>
+              <span className="font-bold text-slate-950">{recommendation.powerSaving ? "사용" : "미사용"}</span>
             </div>
           </div>
         </div>

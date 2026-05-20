@@ -19,12 +19,12 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="border-b border-slate-200 bg-ink text-white lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:border-b-0">
+    <aside className="border-b border-slate-800 bg-navy text-white lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:border-b-0">
       <div className="flex h-full flex-col px-4 py-5">
-        <div className="mb-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200">Admin Console</p>
+        <div className="mb-6 border-b border-white/10 pb-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-teal-300">Operations Console</p>
           <h2 className="mt-2 text-xl font-bold tracking-normal">Solar AquaWatch AX</h2>
-          <p className="mt-2 text-sm font-semibold text-cyan-100">{selectedInstitution?.name}</p>
+          <p className="mt-2 truncate text-sm font-semibold text-slate-300">{selectedInstitution?.name}</p>
         </div>
         <nav className="grid grid-cols-2 gap-2 sm:grid-cols-5 lg:grid-cols-1">
           {links.map((link) => (
@@ -34,7 +34,7 @@ export function Sidebar() {
               className={({ isActive }) =>
                 [
                   "rounded-md px-3 py-3 text-sm font-semibold transition",
-                  isActive ? "bg-white text-ink shadow-sm" : "text-slate-200 hover:bg-white/10 hover:text-white",
+                  isActive ? "bg-white text-slate-950 shadow-sm" : "text-slate-300 hover:bg-white/10 hover:text-white",
                 ].join(" ")
               }
             >
@@ -42,7 +42,7 @@ export function Sidebar() {
             </NavLink>
           ))}
         </nav>
-        <div className="mt-auto hidden rounded-md border border-white/10 bg-white/5 p-4 text-sm text-slate-200 lg:block">
+        <div className="mt-auto hidden rounded-lg border border-white/10 bg-white/[0.04] p-4 text-sm text-slate-300 lg:block">
           <p className="font-semibold text-white">선택된 기관</p>
           <p className="mt-2 leading-6">{selectedInstitution?.region} · {selectedInstitution?.manager}</p>
           <button
