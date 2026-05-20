@@ -25,5 +25,6 @@ AI모델/
 *.weights
 
 # Python cache
+ai_server/.venv/
 __pycache__/
 *.pyc
